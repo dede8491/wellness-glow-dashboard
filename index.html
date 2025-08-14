@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness&Glow - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'warm-beige': '#F8F5F2',
+                        'rich-brown': '#6B4F3F',
+                        'soft-gray': '#E7E3DD',
+                        'cream': '#FEFCFA',
+                        'warm-brown': '#8B6F47'
+                    },
+                    fontFamily: {
+                        'playfair': ['Playfair Display SC', 'serif'],
+                        'sans': ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #F8F5F2 0%, #FEFCFA 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 2px 8px rgba(107, 79, 63, 0.08);
+        }
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(107, 79, 63, 0.12);
+        }
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+        .sidebar-item:hover {
+            background: rgba(139, 111, 71, 0.1);
+            transform: translateX(4px);
+        }
+        .sidebar-item.active {
+            background: rgba(139, 111, 71, 0.15);
+            border-right: 3px solid #8B6F47;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #8B6F47 0%, #6B4F3F 100%);
+        }
+        .breathing-circle {
+            animation: breathe 4s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #FEFCFA 0%, #F8F5F2 100%);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans">
+    <!-- Desktop Layout -->
+    <div class="flex h-screen" id="desktop-view">
+        <!-- Sidebar -->
+        <div class="w-64 bg-cream card-shadow flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-soft-gray">
+                <h1 class="font-playfair text-2xl text-rich-brown">Wellness&Glow</h1>
+                <p class="text-sm text-warm-brown mt-1">Votre bien-être au quotidien ✨</p>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 space-y-2">
+                <button onclick="showPage('dashboard')" class="sidebar-item active flex items-center p-3 rounded-xl text-rich-brown w-full text-left" id="nav-dashboard">
+                    <span class="mr-3">🏠</span>
+                    <span class="font-medium">Accueil</span>
+                </button>
+                <button onclick="showPage('rituels')" class="sidebar-item flex items-center p-3 rounded-xl text-rich-brown w-full text-left" id="nav-rituels">
+                    <span class="mr-3">🌸</span>
+                    <span class="font-medium">Rituels</span>
+                </button>
+                <button onclick="showPage('journal')" class="sidebar-item flex items-center p-3 rounded-xl text-rich-brown w-full text-left" id="nav-journal">
+                    <span class="mr-3">📖</span>
+                    <span class="font-medium">Journal</span>
+                </button>
+                <button onclick="showPage('agenda')" class="sidebar-item flex items-center p-3 rounded-xl text-rich-brown w-full text-left" id="nav-agenda">
+                    <span class="mr-3">📅</span>
+                    <span class="font-medium">Agenda</span>
+                </button>
+                <button onclick="showPage('aspirations')" class="sidebar-item flex items-center p-3 rounded-xl text-rich-brown w-full text-left" id="nav-aspirations">
+                    <span class="mr-3">⭐</span>
+                    <span class="font-medium">Aspirations</span>
+                </button>
+                
+                <!-- Santé (Expandable) -->
+                <div class="space-y-1">
+                    <button class="sidebar-item flex items-center justify-between w-full p-3 rounded-xl text-rich-brown" onclick="toggleSubmenu('health')">
+                        <div class="flex items-center">
+                            <span class="mr-3">💚</span>
+                            <span class="font-medium">Santé</span>
+                        </div>
+                        <span class="text-xs" id="health-arrow">▼</span>
+                    </button>
+                    <div class="ml-6 space-y-1 hidden" id="health-submenu">
+                        <button onclick="showPage('cycle')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">🌙</span>
+                            <span>Cycle féminin</span>
+                        </button>
+                        <button onclick="showPage('bienetre')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">✨</span>
+                            <span>Bien-être quotidien</span>
+                        </button>
+                        <button onclick="showPage('mouvement')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">🏃‍♀️</span>
+                            <span>Mouvement</span>
+                        </button>
+                        <button onclick="showPage('serenite')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">🧘‍♀️</span>
+                            <span>Sérénité mentale</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <button onclick="showPage('meditation')" class="sidebar-item flex items-center p-3 rounded-xl text-rich-brown w-full text-left" id="nav-meditation">
+                    <span class="mr-3">🧘</span>
+                    <span class="font-medium">Méditation</span>
+                </button>
+                <button onclick="showPage('profil')" class="sidebar-item flex items-center p-3 rounded-xl text-rich-brown w-full text-left" id="nav-profil">
+                    <span class="mr-3">👤</span>
+                    <span class="font-medium">Profil</span>
+                </button>
+                
+                <!-- Paramètres (Expandable) -->
+                <div class="space-y-1">
+                    <button class="sidebar-item flex items-center justify-between w-full p-3 rounded-xl text-rich-brown" onclick="toggleSubmenu('settings')">
+                        <div class="flex items-center">
+                            <span class="mr-3">⚙️</span>
+                            <span class="font-medium">Paramètres</span>
+                        </div>
+                        <span class="text-xs" id="settings-arrow">▼</span>
+                    </button>
+                    <div class="ml-6 space-y-1 hidden" id="settings-submenu">
+                        <button onclick="showPage('settings-habitudes')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">🌸</span>
+                            <span>Habitudes</span>
+                        </button>
+                        <button onclick="showPage('settings-aspirations')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">⭐</span>
+                            <span>Aspirations</span>
+                        </button>
+                        <button onclick="showPage('settings-cycle')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">🌙</span>
+                            <span>Cycle</span>
+                        </button>
+                        <button onclick="showPage('settings-complements')" class="sidebar-item flex items-center p-2 rounded-lg text-warm-brown text-sm w-full text-left">
+                            <span class="mr-2">💊</span>
+                            <span>Compléments</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Top Bar -->
+            <header class="bg-cream border-b border-soft-gray p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="font-playfair text-3xl text-rich-brown">Tableau de bord</h2>
+                        <p class="text-warm-brown mt-1">Bonjour Emma ! Prête pour une belle journée ? 🌅</p>
+                    </div>
+                    <button class="bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                        + Ajouter
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <main class="flex-1 p-6 overflow-y-auto" id="main-content">
+                <!-- Page: Dashboard -->
+                <div id="page-dashboard" class="page-content">
+                    <!-- Stats rapides -->
+                    <div class="grid grid-cols-4 gap-6 mb-8">
+                        <div class="stat-card p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-2xl">🔥</span>
+                                <span class="text-3xl font-bold text-rich-brown">7</span>
+                            </div>
+                            <h3 class="font-semibold text-rich-brown">Série actuelle</h3>
+                            <p class="text-sm text-warm-brown">jours consécutifs</p>
+                        </div>
+                        
+                        <div class="stat-card p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-2xl">✅</span>
+                                <span class="text-3xl font-bold text-rich-brown">5/8</span>
+                            </div>
+                            <h3 class="font-semibold text-rich-brown">Rituels du jour</h3>
+                            <div class="w-full bg-soft-gray rounded-full h-2 mt-2">
+                                <div class="progress-bar h-2 rounded-full" style="width: 62.5%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-2xl">🎯</span>
+                                <span class="text-3xl font-bold text-rich-brown">73%</span>
+                            </div>
+                            <h3 class="font-semibold text-rich-brown">Objectifs</h3>
+                            <p class="text-sm text-warm-brown">en cours</p>
+                        </div>
+                        
+                        <div class="stat-card p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-2xl">😊</span>
+                                <span class="text-lg font-bold text-rich-brown">Joyeuse</span>
+                            </div>
+                            <h3 class="font-semibold text-rich-brown">Humeur</h3>
+                            <p class="text-sm text-warm-brown">aujourd'hui</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Focus du jour & Citation -->
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <!-- Focus du jour -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h3 class="font-playfair text-xl text-rich-brown mb-4">Focus du jour ✨</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" checked class="w-5 h-5 text-rich-brown rounded focus:ring-warm-brown">
+                                    <span class="text-rich-brown line-through">Méditation matinale (10 min)</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" checked class="w-5 h-5 text-rich-brown rounded focus:ring-warm-brown">
+                                    <span class="text-rich-brown line-through">Boire 2L d'eau</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" class="w-5 h-5 text-rich-brown rounded focus:ring-warm-brown">
+                                    <span class="text-rich-brown">Marche de 30 minutes</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" class="w-5 h-5 text-rich-brown rounded focus:ring-warm-brown">
+                                    <span class="text-rich-brown">Journal de gratitude</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" class="w-5 h-5 text-rich-brown rounded focus:ring-warm-brown">
+                                    <span class="text-rich-brown">Routine skincare du soir</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Citation du jour -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h3 class="font-playfair text-xl text-rich-brown mb-4">Citation du jour 💫</h3>
+                            <blockquote class="text-rich-brown italic text-lg mb-4 leading-relaxed">
+                                "Prendre soin de soi n'est pas un luxe, c'est une nécessité. Vous méritez votre propre amour et attention."
+                            </blockquote>
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-warm-brown text-cream py-2 px-4 rounded-xl text-sm font-medium hover:bg-rich-brown transition-colors" onclick="generateNewQuote()">
+                                    Nouvelle inspiration
+                                </button>
+                                <button class="bg-soft-gray text-rich-brown py-2 px-4 rounded-xl text-sm font-medium hover:bg-warm-brown hover:text-cream transition-colors" onclick="shareQuote()">
+                                    Partager
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Aperçu rapide des sections -->
+                    <div class="grid grid-cols-3 gap-6">
+                        <!-- Rituels récents -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-playfair text-lg text-rich-brown">Rituels récents</h3>
+                                <button onclick="showPage('rituels')" class="text-warm-brown text-sm hover:text-rich-brown">Voir tout</button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-rich-brown">Méditation matinale</span>
+                                    <span class="text-2xl">✅</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-rich-brown">Hydratation</span>
+                                    <span class="text-2xl">✅</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-rich-brown">Skincare routine</span>
+                                    <span class="text-2xl">⏳</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Prochains événements -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-playfair text-lg text-rich-brown">Agenda</h3>
+                                <button onclick="showPage('agenda')" class="text-warm-brown text-sm hover:text-rich-brown">Voir tout</button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-2 h-2 bg-warm-brown rounded-full"></div>
+                                    <div>
+                                        <p class="text-rich-brown text-sm">Yoga doux</p>
+                                        <p class="text-warm-brown text-xs">18h00</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-2 h-2 bg-rich-brown rounded-full"></div>
+                                    <div>
+                                        <p class="text-rich-brown text-sm">Méditation guidée</p>
+                                        <p class="text-warm-brown text-xs">20h30</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cycle & Bien-être -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-playfair text-lg text-rich-brown">Cycle & Bien-être</h3>
+                                <button onclick="showPage('cycle')" class="text-warm-brown text-sm hover:text-rich-brown">Détails</button>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-rich-brown text-sm">Phase actuelle</span>
+                                    <span class="text-warm-brown font-medium">Folliculaire</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-rich-brown text-sm">Énergie</span>
+                                    <div class="flex space-x-1">
+                                        <div class="w-2 h-2 bg-warm-brown rounded-full"></div>
+                                        <div class="w-2 h-2 bg-warm-brown rounded-full"></div>
+                                        <div class="w-2 h-2 bg-warm-brown rounded-full"></div>
+                                        <div class="w-2 h-2 bg-soft-gray rounded-full"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-rich-brown text-sm">Humeur</span>
+                                    <span class="text-2xl">😊</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Rituels -->
+                <div id="page-rituels" class="page-content hidden">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-playfair text-2xl text-rich-brown">Mes Rituels 🌸</h3>
+                                <p class="text-warm-brown">Cultivez vos habitudes bien-être au quotidien</p>
+                            </div>
+                            <button onclick="addNewRitual()" class="bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                                + Ajouter un rituel
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" checked class="w-6 h-6 text-rich-brown rounded">
+                                    <div>
+                                        <h4 class="font-semibold text-rich-brown">Méditation matinale</h4>
+                                        <p class="text-sm text-warm-brown">10 minutes de pleine conscience</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-2xl">🧘‍♀️</span>
+                                    <p class="text-xs text-warm-brown">7 jours</p>
+                                </div>
+                            </div>
+                            <div class="w-full bg-soft-gray rounded-full h-2">
+                                <div class="progress-bar h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" checked class="w-6 h-6 text-rich-brown rounded">
+                                    <div>
+                                        <h4 class="font-semibold text-rich-brown">Hydratation</h4>
+                                        <p class="text-sm text-warm-brown">2L d'eau par jour</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-2xl">💧</span>
+                                    <p class="text-xs text-warm-brown">5 jours</p>
+                                </div>
+                            </div>
+                            <div class="w-full bg-soft-gray rounded-full h-2">
+                                <div class="progress-bar h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" class="w-6 h-6 text-rich-brown rounded">
+                                    <div>
+                                        <h4 class="font-semibold text-rich-brown">Routine skincare</h4>
+                                        <p class="text-sm text-warm-brown">Soin visage matin & soir</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-2xl">✨</span>
+                                    <p class="text-xs text-warm-brown">3 jours</p>
+                                </div>
+                            </div>
+                            <div class="w-full bg-soft-gray rounded-full h-2">
+                                <div class="progress-bar h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" class="w-6 h-6 text-rich-brown rounded">
+                                    <div>
+                                        <h4 class="font-semibold text-rich-brown">Marche quotidienne</h4>
+                                        <p class="text-sm text-warm-brown">30 minutes en plein air</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-2xl">🚶‍♀️</span>
+                                    <p class="text-xs text-warm-brown">2 jours</p>
+                                </div>
+                            </div>
+                            <div class="w-full bg-soft-gray rounded-full h-2">
+                                <div class="progress-bar h-2 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Journal -->
+                <div id="page-journal" class="page-content hidden">
+                    <div class="mb-6">
+                        <h3 class="font-playfair text-2xl text-rich-brown mb-2">Mon Journal 📖</h3>
+                        <p class="text-warm-brown">Prenez un moment pour vous connecter à vos émotions</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-6">
+                        <!-- Gratitude -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Gratitude 🙏</h4>
+                            <div class="space-y-3">
+                                <textarea placeholder="Je suis reconnaissante pour..." class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                                <textarea placeholder="Aujourd'hui j'ai apprécié..." class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                                <textarea placeholder="Une petite joie du jour..." class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Humeur -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Humeur du jour 😊</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Comment vous sentez-vous ?</label>
+                                    <select class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                        <option>😊 Joyeuse</option>
+                                        <option>😌 Sereine</option>
+                                        <option>😔 Mélancolique</option>
+                                        <option>😤 Stressée</option>
+                                        <option>🥰 Épanouie</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Niveau d'énergie</label>
+                                    <input type="range" min="1" max="10" value="7" class="w-full">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Sentiment de paix</label>
+                                    <input type="range" min="1" max="10" value="8" class="w-full">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Réflexions -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Réflexions 💭</h4>
+                            <div class="space-y-3">
+                                <textarea placeholder="Qu'est-ce qui m'a marquée aujourd'hui ?" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                                <textarea placeholder="Comment puis-je m'améliorer demain ?" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                                <textarea placeholder="Une leçon apprise..." class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Intentions -->
+                    <div class="mt-6 bg-cream p-6 rounded-2xl card-shadow">
+                        <h4 class="font-playfair text-lg text-rich-brown mb-4">Intentions pour demain ✨</h4>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm text-rich-brown mb-2">Mon intention principale</label>
+                                <input type="text" placeholder="Je veux me concentrer sur..." class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-rich-brown mb-2">3 actions concrètes</label>
+                                <div class="space-y-2">
+                                    <input type="text" placeholder="Action 1..." class="w-full p-2 rounded-lg border border-soft-gray focus:border-warm-brown">
+                                    <input type="text" placeholder="Action 2..." class="w-full p-2 rounded-lg border border-soft-gray focus:border-warm-brown">
+                                    <input type="text" placeholder="Action 3..." class="w-full p-2 rounded-lg border border-soft-gray focus:border-warm-brown">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="saveJournal()" class="mt-4 bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                            Sauvegarder mon journal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Page: Méditation -->
+                <div id="page-meditation" class="page-content hidden">
+                    <div class="mb-6">
+                        <h3 class="font-playfair text-2xl text-rich-brown mb-2">Méditation 🧘‍♀️</h3>
+                        <p class="text-warm-brown">Trouvez votre moment de sérénité</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift cursor-pointer" onclick="startMeditation('4-7-8')">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-rich-brown">Respiration 4-7-8</h4>
+                                <span class="text-2xl">🌬️</span>
+                            </div>
+                            <p class="text-sm text-warm-brown mb-3">Technique apaisante pour réduire le stress</p>
+                            <div class="text-xs text-warm-brown">⏱️ 5-10 minutes</div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift cursor-pointer" onclick="startMeditation('coherence')">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-rich-brown">Cohérence cardiaque</h4>
+                                <span class="text-2xl">💗</span>
+                            </div>
+                            <p class="text-sm text-warm-brown mb-3">Harmonisez votre rythme cardiaque</p>
+                            <div class="text-xs text-warm-brown">⏱️ 5 minutes</div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift cursor-pointer" onclick="startMeditation('energizing')">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-rich-brown">Respiration énergisante</h4>
+                                <span class="text-2xl">⚡</span>
+                            </div>
+                            <p class="text-sm text-warm-brown mb-3">Réveillez votre vitalité intérieure</p>
+                            <div class="text-xs text-warm-brown">⏱️ 3-5 minutes</div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift cursor-pointer" onclick="startMeditation('square')">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-rich-brown">Respiration carrée</h4>
+                                <span class="text-2xl">⬜</span>
+                            </div>
+                            <p class="text-sm text-warm-brown mb-3">Équilibrez votre système nerveux</p>
+                            <div class="text-xs text-warm-brown">⏱️ 5-8 minutes</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interface de méditation -->
+                    <div id="meditation-interface" class="hidden bg-cream p-8 rounded-2xl card-shadow text-center">
+                        <div class="breathing-circle w-32 h-32 bg-gradient-to-br from-warm-brown to-rich-brown rounded-full mx-auto mb-6 flex items-center justify-center">
+                            <span class="text-cream text-2xl">🌸</span>
+                        </div>
+                        <h4 class="font-playfair text-xl text-rich-brown mb-2" id="meditation-title">Respiration 4-7-8</h4>
+                        <p class="text-warm-brown mb-6" id="meditation-instruction">Inspirez par le nez pendant 4 secondes</p>
+                        <div class="flex justify-center space-x-4">
+                            <button id="start-btn" onclick="toggleMeditation()" class="bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                                Commencer
+                            </button>
+                            <button onclick="stopMeditation()" class="bg-soft-gray text-rich-brown px-6 py-3 rounded-xl font-medium hover:bg-warm-brown hover:text-cream transition-colors">
+                                Arrêter
+                            </button>
+                        </div>
+                        <div class="mt-4 text-sm text-warm-brown">
+                            <span id="timer-display">00:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Agenda -->
+                <div id="page-agenda" class="page-content hidden">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-playfair text-2xl text-rich-brown">Mon Agenda 📅</h3>
+                                <p class="text-warm-brown">Planifiez vos moments bien-être</p>
+                            </div>
+                            <button onclick="addEvent()" class="bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                                + Nouvel événement
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Vue semaine -->
+                    <div class="grid grid-cols-7 gap-4 mb-8">
+                        <div class="text-center">
+                            <h4 class="font-semibold text-rich-brown mb-2">Lun</h4>
+                            <div class="bg-cream p-4 rounded-xl card-shadow min-h-32">
+                                <div class="bg-warm-brown text-cream text-xs p-2 rounded-lg mb-2">
+                                    <div class="font-medium">Méditation</div>
+                                    <div>7h00</div>
+                                </div>
+                                <div class="bg-rich-brown text-cream text-xs p-2 rounded-lg">
+                                    <div class="font-medium">Yoga</div>
+                                    <div>18h30</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h4 class="font-semibold text-rich-brown mb-2">Mar</h4>
+                            <div class="bg-cream p-4 rounded-xl card-shadow min-h-32">
+                                <div class="bg-warm-brown text-cream text-xs p-2 rounded-lg mb-2">
+                                    <div class="font-medium">Journal</div>
+                                    <div>8h00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h4 class="font-semibold text-rich-brown mb-2">Mer</h4>
+                            <div class="bg-cream p-4 rounded-xl card-shadow min-h-32">
+                                <div class="bg-rich-brown text-cream text-xs p-2 rounded-lg mb-2">
+                                    <div class="font-medium">Marche</div>
+                                    <div>17h00</div>
+                                </div>
+                                <div class="bg-warm-brown text-cream text-xs p-2 rounded-lg">
+                                    <div class="font-medium">Skincare</div>
+                                    <div>21h00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h4 class="font-semibold text-rich-brown mb-2">Jeu</h4>
+                            <div class="bg-cream p-4 rounded-xl card-shadow min-h-32 border-2 border-warm-brown">
+                                <div class="text-xs text-warm-brown mb-2 font-medium">Aujourd'hui</div>
+                                <div class="bg-warm-brown text-cream text-xs p-2 rounded-lg mb-2">
+                                    <div class="font-medium">Méditation</div>
+                                    <div>7h00 ✅</div>
+                                </div>
+                                <div class="bg-rich-brown text-cream text-xs p-2 rounded-lg">
+                                    <div class="font-medium">Yoga doux</div>
+                                    <div>18h00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h4 class="font-semibold text-rich-brown mb-2">Ven</h4>
+                            <div class="bg-cream p-4 rounded-xl card-shadow min-h-32">
+                                <div class="bg-warm-brown text-cream text-xs p-2 rounded-lg">
+                                    <div class="font-medium">Bain relaxant</div>
+                                    <div>20h00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h4 class="font-semibold text-rich-brown mb-2">Sam</h4>
+                            <div class="bg-cream p-4 rounded-xl card-shadow min-h-32">
+                                <div class="bg-rich-brown text-cream text-xs p-2 rounded-lg mb-2">
+                                    <div class="font-medium">Randonnée</div>
+                                    <div>9h00</div>
+                                </div>
+                                <div class="bg-warm-brown text-cream text-xs p-2 rounded-lg">
+                                    <div class="font-medium">Massage</div>
+                                    <div>15h00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h4 class="font-semibold text-rich-brown mb-2">Dim</h4>
+                            <div class="bg-cream p-4 rounded-xl card-shadow min-h-32">
+                                <div class="bg-warm-brown text-cream text-xs p-2 rounded-lg">
+                                    <div class="font-medium">Repos</div>
+                                    <div>Toute la journée</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Événements à venir -->
+                    <div class="bg-cream p-6 rounded-2xl card-shadow">
+                        <h4 class="font-playfair text-lg text-rich-brown mb-4">Prochains événements</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-2xl">🧘‍♀️</span>
+                                    <div>
+                                        <h5 class="font-medium text-rich-brown">Yoga doux</h5>
+                                        <p class="text-sm text-warm-brown">Aujourd'hui à 18h00</p>
+                                    </div>
+                                </div>
+                                <button class="text-warm-brown hover:text-rich-brown">✏️</button>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-2xl">🛁</span>
+                                    <div>
+                                        <h5 class="font-medium text-rich-brown">Bain relaxant</h5>
+                                        <p class="text-sm text-warm-brown">Vendredi à 20h00</p>
+                                    </div>
+                                </div>
+                                <button class="text-warm-brown hover:text-rich-brown">✏️</button>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-2xl">🥾</span>
+                                    <div>
+                                        <h5 class="font-medium text-rich-brown">Randonnée nature</h5>
+                                        <p class="text-sm text-warm-brown">Samedi à 9h00</p>
+                                    </div>
+                                </div>
+                                <button class="text-warm-brown hover:text-rich-brown">✏️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page: Aspirations -->
+                <div id="page-aspirations" class="page-content hidden">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-playfair text-2xl text-rich-brown">Mes Aspirations ⭐</h3>
+                                <p class="text-warm-brown">Visualisez et réalisez vos rêves</p>
+                            </div>
+                            <button onclick="addAspiration()" class="bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                                + Nouvelle aspiration
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Vision Board -->
+                    <div class="mb-8">
+                        <h4 class="font-playfair text-lg text-rich-brown mb-4">Mon Vision Board 🎯</h4>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift">
+                                <div class="text-center mb-4">
+                                    <span class="text-4xl">🏡</span>
+                                </div>
+                                <h5 class="font-semibold text-rich-brown text-center mb-2">Maison de rêve</h5>
+                                <p class="text-sm text-warm-brown text-center mb-3">Une maison avec jardin et vue sur la nature</p>
+                                <div class="w-full bg-soft-gray rounded-full h-2">
+                                    <div class="progress-bar h-2 rounded-full" style="width: 35%"></div>
+                                </div>
+                                <p class="text-xs text-warm-brown text-center mt-2">35% réalisé</p>
+                            </div>
+                            
+                            <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift">
+                                <div class="text-center mb-4">
+                                    <span class="text-4xl">✈️</span>
+                                </div>
+                                <h5 class="font-semibold text-rich-brown text-center mb-2">Voyage en Asie</h5>
+                                <p class="text-sm text-warm-brown text-center mb-3">Découvrir la culture et la spiritualité asiatique</p>
+                                <div class="w-full bg-soft-gray rounded-full h-2">
+                                    <div class="progress-bar h-2 rounded-full" style="width: 60%"></div>
+                                </div>
+                                <p class="text-xs text-warm-brown text-center mt-2">60% réalisé</p>
+                            </div>
+                            
+                            <div class="bg-cream p-6 rounded-2xl card-shadow hover-lift">
+                                <div class="text-center mb-4">
+                                    <span class="text-4xl">🧘‍♀️</span>
+                                </div>
+                                <h5 class="font-semibold text-rich-brown text-center mb-2">Équilibre parfait</h5>
+                                <p class="text-sm text-warm-brown text-center mb-3">Harmonie entre vie pro et bien-être personnel</p>
+                                <div class="w-full bg-soft-gray rounded-full h-2">
+                                    <div class="progress-bar h-2 rounded-full" style="width: 80%"></div>
+                                </div>
+                                <p class="text-xs text-warm-brown text-center mt-2">80% réalisé</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Objectifs par catégorie -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <!-- Objectifs à court terme -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Court terme (3 mois) 🎯</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" checked class="w-5 h-5 text-rich-brown rounded">
+                                        <span class="text-rich-brown line-through">Méditer 21 jours consécutifs</span>
+                                    </div>
+                                    <span class="text-green-500">✅</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                                        <span class="text-rich-brown">Apprendre le yoga</span>
+                                    </div>
+                                    <span class="text-warm-brown">🔄</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                                        <span class="text-rich-brown">Routine skincare parfaite</span>
+                                    </div>
+                                    <span class="text-warm-brown">🔄</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Objectifs à long terme -->
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Long terme (1 an) 🌟</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                                        <span class="text-rich-brown">Certification yoga</span>
+                                    </div>
+                                    <span class="text-warm-brown">📚</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                                        <span class="text-rich-brown">Retraite spirituelle</span>
+                                    </div>
+                                    <span class="text-warm-brown">🏔️</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-3 bg-warm-beige rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                                        <span class="text-rich-brown">Créer mon espace zen</span>
+                                    </div>
+                                    <span class="text-warm-brown">🏡</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Affirmations -->
+                    <div class="mt-6 bg-cream p-6 rounded-2xl card-shadow">
+                        <h4 class="font-playfair text-lg text-rich-brown mb-4">Mes Affirmations 💫</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-warm-beige rounded-xl text-center">
+                                <p class="text-rich-brown italic">"Je mérite le bonheur et la paix intérieure"</p>
+                            </div>
+                            <div class="p-4 bg-warm-beige rounded-xl text-center">
+                                <p class="text-rich-brown italic">"Chaque jour, je deviens la meilleure version de moi-même"</p>
+                            </div>
+                            <div class="p-4 bg-warm-beige rounded-xl text-center">
+                                <p class="text-rich-brown italic">"J'attire l'abondance et la joie dans ma vie"</p>
+                            </div>
+                            <div class="p-4 bg-warm-beige rounded-xl text-center">
+                                <p class="text-rich-brown italic">"Je suis en harmonie avec mon corps et mon esprit"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page: Cycle féminin -->
+                <div id="page-cycle" class="page-content hidden">
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-playfair text-2xl text-rich-brown">Cycle féminin 🌙</h3>
+                                <p class="text-warm-brown">Suivez et comprenez votre cycle naturel</p>
+                            </div>
+                            <button onclick="openPeriodModal()" class="bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                                📅 Saisir mes règles
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Jour actuel et phase -->
+                    <div class="grid grid-cols-4 gap-6 mb-8">
+                        <div class="bg-cream p-6 rounded-2xl card-shadow text-center">
+                            <div class="text-4xl mb-3">📅</div>
+                            <h4 class="font-semibold text-rich-brown mb-2">Jour actuel</h4>
+                            <p class="text-2xl font-bold text-warm-brown" id="current-cycle-day">12</p>
+                            <p class="text-sm text-warm-brown mt-1">du cycle</p>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow text-center">
+                            <div class="text-4xl mb-3" id="phase-emoji">🌱</div>
+                            <h4 class="font-semibold text-rich-brown mb-2">Phase actuelle</h4>
+                            <p class="text-warm-brown font-medium" id="current-phase">Folliculaire</p>
+                            <p class="text-sm text-warm-brown mt-1" id="phase-description">Énergie croissante</p>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-semibold text-rich-brown mb-3 text-center">Progression du cycle</h4>
+                            <div class="w-full bg-soft-gray rounded-full h-3 mb-2">
+                                <div class="progress-bar h-3 rounded-full transition-all duration-500" style="width: 40%" id="cycle-progress"></div>
+                            </div>
+                            <p class="text-sm text-warm-brown text-center">40% du cycle</p>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow text-center">
+                            <div class="text-4xl mb-3">⚡</div>
+                            <h4 class="font-semibold text-rich-brown mb-2">Niveau d'énergie</h4>
+                            <div class="flex justify-center space-x-1 mb-2">
+                                <div class="w-3 h-3 bg-warm-brown rounded-full"></div>
+                                <div class="w-3 h-3 bg-warm-brown rounded-full"></div>
+                                <div class="w-3 h-3 bg-warm-brown rounded-full"></div>
+                                <div class="w-3 h-3 bg-soft-gray rounded-full"></div>
+                            </div>
+                            <p class="text-sm text-warm-brown">Élevé</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Prédictions -->
+                    <div class="bg-cream p-6 rounded-2xl card-shadow mb-8">
+                        <h4 class="font-playfair text-lg text-rich-brown mb-4">Prédictions 🔮</h4>
+                        <div class="grid grid-cols-3 gap-6">
+                            <div class="text-center p-4 bg-warm-beige rounded-xl">
+                                <div class="text-3xl mb-2">🌸</div>
+                                <h5 class="font-semibold text-rich-brown mb-1">Prochaine ovulation</h5>
+                                <p class="text-warm-brown font-medium" id="next-ovulation">Dans 2 jours</p>
+                                <p class="text-sm text-warm-brown" id="ovulation-date">15 Déc 2024</p>
+                            </div>
+                            
+                            <div class="text-center p-4 bg-warm-beige rounded-xl">
+                                <div class="text-3xl mb-2">💕</div>
+                                <h5 class="font-semibold text-rich-brown mb-1">Fenêtre fertile</h5>
+                                <p class="text-warm-brown font-medium" id="fertile-window">Aujourd'hui - 17 Déc</p>
+                                <p class="text-sm text-warm-brown">5 jours</p>
+                            </div>
+                            
+                            <div class="text-center p-4 bg-warm-beige rounded-xl">
+                                <div class="text-3xl mb-2">🩸</div>
+                                <h5 class="font-semibold text-rich-brown mb-1">Prochaines règles</h5>
+                                <p class="text-warm-brown font-medium" id="next-period">Dans 16 jours</p>
+                                <p class="text-sm text-warm-brown" id="period-date">29 Déc 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Symptômes & Humeurs -->
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Symptômes aujourd'hui 📝</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Symptômes physiques</label>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="crampes">Crampes</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="fatigue">Fatigue</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="ballonnements">Ballonnements</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="maux-tete">Maux de tête</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="sensibilite">Sensibilité seins</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="nausees">Nausées</button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Symptômes émotionnels</label>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="irritabilite">Irritabilité</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="anxiete">Anxiété</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="tristesse">Tristesse</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="euphorie">Euphorie</button>
+                                        <button class="symptom-tag px-3 py-1 bg-soft-gray text-rich-brown rounded-full text-xs hover:bg-warm-brown hover:text-cream transition-colors" data-symptom="concentration">Difficultés concentration</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Humeur & Énergie 😊</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Humeur générale</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <button class="mood-btn p-3 rounded-xl bg-soft-gray hover:bg-warm-brown hover:text-cream transition-colors text-center" data-mood="joyeuse">
+                                            <div class="text-2xl mb-1">😊</div>
+                                            <div class="text-xs">Joyeuse</div>
+                                        </button>
+                                        <button class="mood-btn p-3 rounded-xl bg-soft-gray hover:bg-warm-brown hover:text-cream transition-colors text-center" data-mood="calme">
+                                            <div class="text-2xl mb-1">😌</div>
+                                            <div class="text-xs">Calme</div>
+                                        </button>
+                                        <button class="mood-btn p-3 rounded-xl bg-soft-gray hover:bg-warm-brown hover:text-cream transition-colors text-center" data-mood="stresse">
+                                            <div class="text-2xl mb-1">😰</div>
+                                            <div class="text-xs">Stressée</div>
+                                        </button>
+                                        <button class="mood-btn p-3 rounded-xl bg-soft-gray hover:bg-warm-brown hover:text-cream transition-colors text-center" data-mood="irritable">
+                                            <div class="text-2xl mb-1">😤</div>
+                                            <div class="text-xs">Irritable</div>
+                                        </button>
+                                        <button class="mood-btn p-3 rounded-xl bg-soft-gray hover:bg-warm-brown hover:text-cream transition-colors text-center" data-mood="melancolique">
+                                            <div class="text-2xl mb-1">😔</div>
+                                            <div class="text-xs">Mélancolique</div>
+                                        </button>
+                                        <button class="mood-btn p-3 rounded-xl bg-soft-gray hover:bg-warm-brown hover:text-cream transition-colors text-center" data-mood="energique">
+                                            <div class="text-2xl mb-1">🤩</div>
+                                            <div class="text-xs">Énergique</div>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Niveau d'énergie (1-10)</label>
+                                    <input type="range" min="1" max="10" value="7" class="w-full" id="energy-level">
+                                    <div class="flex justify-between text-xs text-warm-brown mt-1">
+                                        <span>Épuisée</span>
+                                        <span id="energy-value">7</span>
+                                        <span>Débordante</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Qualité du sommeil</label>
+                                    <select class="w-full p-2 rounded-lg border border-soft-gray focus:border-warm-brown" id="sleep-quality">
+                                        <option value="">Sélectionner...</option>
+                                        <option value="excellent">Excellent</option>
+                                        <option value="bon">Bon</option>
+                                        <option value="moyen">Moyen</option>
+                                        <option value="mauvais">Mauvais</option>
+                                        <option value="insomnie">Insomnie</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Résumé -->
+                    <div class="bg-cream p-6 rounded-2xl card-shadow mb-6">
+                        <h4 class="font-playfair text-lg text-rich-brown mb-4">Résumé du jour 📊</h4>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-semibold text-rich-brown mb-2">Symptômes sélectionnés</h5>
+                                <div id="selected-symptoms" class="text-sm text-warm-brown">
+                                    Aucun symptôme sélectionné
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-rich-brown mb-2">État général</h5>
+                                <div id="general-state" class="text-sm text-warm-brown">
+                                    Humeur : Non définie<br>
+                                    Énergie : 7/10<br>
+                                    Sommeil : Non défini
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label class="block text-sm text-rich-brown mb-2">Notes personnelles (optionnel)</label>
+                            <textarea id="cycle-notes" placeholder="Ajoutez vos observations du jour..." class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                        </div>
+                        
+                        <button onclick="saveCycleData()" class="mt-4 bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                            💾 Sauvegarder les données du jour
+                        </button>
+                    </div>
+                    
+                    <!-- Modal pour saisir les règles -->
+                    <div id="period-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+                        <div class="bg-cream p-8 rounded-2xl card-shadow max-w-md w-full mx-4">
+                            <h4 class="font-playfair text-xl text-rich-brown mb-4">Saisir mes règles 🩸</h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Date de début des dernières règles</label>
+                                    <input type="date" id="last-period-date" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Durée habituelle du cycle (jours)</label>
+                                    <select id="cycle-length" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                        <option value="21">21 jours</option>
+                                        <option value="22">22 jours</option>
+                                        <option value="23">23 jours</option>
+                                        <option value="24">24 jours</option>
+                                        <option value="25">25 jours</option>
+                                        <option value="26">26 jours</option>
+                                        <option value="27">27 jours</option>
+                                        <option value="28" selected>28 jours</option>
+                                        <option value="29">29 jours</option>
+                                        <option value="30">30 jours</option>
+                                        <option value="31">31 jours</option>
+                                        <option value="32">32 jours</option>
+                                        <option value="33">33 jours</option>
+                                        <option value="34">34 jours</option>
+                                        <option value="35">35 jours</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Durée des règles (jours)</label>
+                                    <select id="period-duration" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                        <option value="3">3 jours</option>
+                                        <option value="4">4 jours</option>
+                                        <option value="5" selected>5 jours</option>
+                                        <option value="6">6 jours</option>
+                                        <option value="7">7 jours</option>
+                                        <option value="8">8 jours</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-4 mt-6">
+                                <button onclick="calculateCycle()" class="flex-1 bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                                    Calculer mon cycle
+                                </button>
+                                <button onclick="closePeriodModal()" class="bg-soft-gray text-rich-brown px-6 py-3 rounded-xl font-medium hover:bg-warm-brown hover:text-cream transition-colors">
+                                    Annuler
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pages Santé supplémentaires -->
+                <div id="page-bienetre" class="page-content hidden">
+                    <h3 class="font-playfair text-2xl text-rich-brown mb-4">Bien-être quotidien ✨</h3>
+                    <p class="text-warm-brown">Page en cours de développement...</p>
+                </div>
+                
+                <div id="page-mouvement" class="page-content hidden">
+                    <h3 class="font-playfair text-2xl text-rich-brown mb-4">Mouvement 🏃‍♀️</h3>
+                    <p class="text-warm-brown">Page en cours de développement...</p>
+                </div>
+                
+                <div id="page-serenite" class="page-content hidden">
+                    <h3 class="font-playfair text-2xl text-rich-brown mb-4">Sérénité mentale 🧘‍♀️</h3>
+                    <p class="text-warm-brown">Page en cours de développement...</p>
+                </div>
+                
+                <!-- Page: Profil -->
+                <div id="page-profil" class="page-content hidden">
+                    <div class="mb-6">
+                        <h3 class="font-playfair text-2xl text-rich-brown mb-2">Mon Profil 👤</h3>
+                        <p class="text-warm-brown">Personnalisez votre expérience bien-être</p>
+                    </div>
+                    
+                    <!-- Informations personnelles -->
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="col-span-2 bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Informations personnelles</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-1">Prénom</label>
+                                    <input type="text" value="Emma" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-1">Âge</label>
+                                    <input type="number" value="28" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-1">Email</label>
+                                    <input type="email" value="emma@wellness.com" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-1">Fuseau horaire</label>
+                                    <select class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                        <option>Europe/Paris</option>
+                                        <option>Europe/London</option>
+                                        <option>America/New_York</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow text-center">
+                            <div class="w-24 h-24 bg-warm-brown rounded-full mx-auto mb-4 flex items-center justify-center">
+                                <span class="text-3xl text-cream">👤</span>
+                            </div>
+                            <h5 class="font-semibold text-rich-brown mb-2">Emma</h5>
+                            <p class="text-sm text-warm-brown mb-4">Membre depuis Mars 2024</p>
+                            <button class="bg-rich-brown text-cream px-4 py-2 rounded-xl text-sm hover:bg-warm-brown transition-colors">
+                                Changer la photo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Préférences -->
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Préférences de bien-être</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Objectif principal</label>
+                                    <select class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                        <option>Équilibre vie-travail</option>
+                                        <option>Gestion du stress</option>
+                                        <option>Améliorer le sommeil</option>
+                                        <option>Développement personnel</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Niveau d'activité</label>
+                                    <select class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                        <option>Débutante</option>
+                                        <option>Intermédiaire</option>
+                                        <option>Avancée</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-rich-brown mb-2">Temps disponible par jour</label>
+                                    <select class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                        <option>15-30 minutes</option>
+                                        <option>30-60 minutes</option>
+                                        <option>Plus d'1 heure</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-cream p-6 rounded-2xl card-shadow">
+                            <h4 class="font-playfair text-lg text-rich-brown mb-4">Notifications</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-rich-brown">Rappels quotidiens</p>
+                                        <p class="text-sm text-warm-brown">Rituels et méditation</p>
+                                    </div>
+                                    <input type="checkbox" checked class="w-5 h-5 text-rich-brown rounded">
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-rich-brown">Suivi du cycle</p>
+                                        <p class="text-sm text-warm-brown">Phases et recommandations</p>
+                                    </div>
+                                    <input type="checkbox" checked class="w-5 h-5 text-rich-brown rounded">
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-rich-brown">Citations inspirantes</p>
+                                        <p class="text-sm text-warm-brown">Une fois par jour</p>
+                                    </div>
+                                    <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-rich-brown">Rappels d'hydratation</p>
+                                        <p class="text-sm text-warm-brown">Toutes les 2 heures</p>
+                                    </div>
+                                    <input type="checkbox" checked class="w-5 h-5 text-rich-brown rounded">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Statistiques personnelles -->
+                    <div class="bg-cream p-6 rounded-2xl card-shadow mb-6">
+                        <h4 class="font-playfair text-lg text-rich-brown mb-4">Mes statistiques 📊</h4>
+                        <div class="grid grid-cols-4 gap-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-rich-brown mb-1">47</div>
+                                <p class="text-sm text-warm-brown">Jours actifs</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-rich-brown mb-1">156</div>
+                                <p class="text-sm text-warm-brown">Rituels complétés</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-rich-brown mb-1">23h</div>
+                                <p class="text-sm text-warm-brown">Temps de méditation</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-rich-brown mb-1">12</div>
+                                <p class="text-sm text-warm-brown">Objectifs atteints</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex justify-between">
+                        <div class="space-x-4">
+                            <button onclick="saveProfile()" class="bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                                Sauvegarder les modifications
+                            </button>
+                            <button class="bg-soft-gray text-rich-brown px-6 py-3 rounded-xl font-medium hover:bg-warm-brown hover:text-cream transition-colors">
+                                Exporter mes données
+                            </button>
+                        </div>
+                        <button class="text-red-500 hover:text-red-700 px-4 py-2 rounded-xl text-sm">
+                            Supprimer le compte
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Tablet View (Hidden by default) -->
+    <div class="hidden" id="tablet-view">
+        <!-- Tablet layout will be shown when screen size changes -->
+    </div>
+    
+    <!-- Mobile View (Hidden by default) -->
+    <div class="hidden" id="mobile-view">
+        <!-- Mobile layout will be shown when screen size changes -->
+    </div>
+
+    <script>
+        // Current page tracking
+        let currentPage = 'dashboard';
+        let meditationTimer = null;
+        let meditationStartTime = null;
+        
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                currentPage = pageId;
+                
+                // Update page title
+                updatePageTitle(pageId);
+                
+                // Add active class to current nav item
+                const navItem = document.getElementById('nav-' + pageId);
+                if (navItem) {
+                    navItem.classList.add('active');
+                }
+            }
+        }
+        
+        function updatePageTitle(pageId) {
+            const titles = {
+                'dashboard': 'Tableau de bord',
+                'rituels': 'Mes Rituels',
+                'journal': 'Mon Journal',
+                'meditation': 'Méditation',
+                'agenda': 'Mon Agenda',
+                'aspirations': 'Mes Aspirations',
+                'cycle': 'Cycle Féminin',
+                'profil': 'Mon Profil'
+            };
+            
+            const titleElement = document.querySelector('header h2');
+            if (titleElement && titles[pageId]) {
+                titleElement.textContent = titles[pageId];
+            }
+        }
+        
+        // Toggle submenu functionality
+        function toggleSubmenu(menuId) {
+            const submenu = document.getElementById(menuId + '-submenu');
+            const arrow = document.getElementById(menuId + '-arrow');
+            
+            if (submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                arrow.textContent = '▲';
+            } else {
+                submenu.classList.add('hidden');
+                arrow.textContent = '▼';
+            }
+        }
+        
+        // Quote functionality
+        const quotes = [
+            "Prendre soin de soi n'est pas un luxe, c'est une nécessité. Vous méritez votre propre amour et attention.",
+            "Chaque jour est une nouvelle opportunité de grandir et de rayonner.",
+            "La beauté commence au moment où vous décidez d'être vous-même.",
+            "Votre bien-être est un investissement, pas une dépense.",
+            "Respirez profondément et rappelez-vous qui vous êtes vraiment.",
+            "La paix intérieure est le nouveau succès."
+        ];
+        
+        function generateNewQuote() {
+            const quoteElement = document.querySelector('blockquote');
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteElement.textContent = `"${randomQuote}"`;
+        }
+        
+        function shareQuote() {
+            const quote = document.querySelector('blockquote').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Citation Wellness&Glow',
+                    text: quote
+                });
+            } else {
+                // Fallback pour les navigateurs qui ne supportent pas l'API Share
+                navigator.clipboard.writeText(quote).then(() => {
+                    alert('Citation copiée dans le presse-papiers ! ✨');
+                });
+            }
+        }
+        
+        // Journal functionality
+        function saveJournal() {
+            // Simulate saving
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-rich-brown text-cream px-6 py-3 rounded-xl card-shadow z-50';
+            notification.innerHTML = '✅ Journal sauvegardé avec succès !';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Ritual functionality
+        function addNewRitual() {
+            // Create modal for better UX
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-cream p-8 rounded-2xl card-shadow max-w-md w-full mx-4">
+                    <h4 class="font-playfair text-xl text-rich-brown mb-6">Créer un nouveau rituel 🌸</h4>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-rich-brown mb-2">Nom du rituel *</label>
+                            <input type="text" id="ritual-name" placeholder="Ex: Méditation matinale" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-rich-brown mb-2">Description *</label>
+                            <textarea id="ritual-description" placeholder="Ex: 10 minutes de pleine conscience" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown resize-none h-20"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-rich-brown mb-2">Emoji représentatif</label>
+                            <div class="grid grid-cols-6 gap-2 mb-2">
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="🧘‍♀️">🧘‍♀️</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="💧">💧</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="✨">✨</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="🚶‍♀️">🚶‍♀️</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="📖">📖</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="🌱">🌱</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="🍃">🍃</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="🌸">🌸</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="🌙">🌙</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="☀️">☀️</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="💪">💪</button>
+                                <button type="button" class="emoji-btn p-2 rounded-lg hover:bg-warm-brown hover:text-cream transition-colors text-2xl" data-emoji="🎯">🎯</button>
+                            </div>
+                            <input type="text" id="ritual-emoji" placeholder="Ou tapez votre emoji" class="w-full p-2 rounded-lg border border-soft-gray focus:border-warm-brown text-center" maxlength="2">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-rich-brown mb-2">Fréquence</label>
+                            <select id="ritual-frequency" class="w-full p-3 rounded-xl border border-soft-gray focus:border-warm-brown">
+                                <option value="daily">Quotidien</option>
+                                <option value="weekly">Hebdomadaire</option>
+                                <option value="custom">Personnalisé</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4 mt-6">
+                        <button onclick="saveNewRitual()" class="flex-1 bg-rich-brown text-cream px-6 py-3 rounded-xl font-medium hover:bg-warm-brown transition-colors">
+                            ✨ Créer le rituel
+                        </button>
+                        <button onclick="closeRitualModal()" class="bg-soft-gray text-rich-brown px-6 py-3 rounded-xl font-medium hover:bg-warm-brown hover:text-cream transition-colors">
+                            Annuler
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Add emoji selection functionality
+            modal.querySelectorAll('.emoji-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove selection from other buttons
+                    modal.querySelectorAll('.emoji-btn').forEach(b => {
+                        b.classList.remove('bg-warm-brown', 'text-cream');
+                    });
+                    // Select this button
+                    this.classList.add('bg-warm-brown', 'text-cream');
+                    document.getElementById('ritual-emoji').value = this.dataset.emoji;
+                });
+            });
+            
+            // Focus on first input
+            setTimeout(() => {
+                document.getElementById('ritual-name').focus();
+            }, 100);
+        }
+        
+        function saveNewRitual() {
+            const name = document.getElementById('ritual-name').value.trim();
+            const description = document.getElementById('ritual-description').value.trim();
+            const emoji = document.getElementById('ritual-emoji').value || '✨';
+            const frequency = document.getElementById('ritual-frequency').value;
+            
+            if (!name || !description) {
+                alert('Veuillez remplir le nom et la description du rituel.');
+                return;
+            }
+            
+            // Create the new ritual element
+            const ritualsContainer = document.querySelector('#page-rituels .grid');
+            const newRitual = document.createElement('div');
+            newRitual.className = 'bg-cream p-6 rounded-2xl card-shadow hover-lift';
+            newRitual.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" class="w-6 h-6 text-rich-brown rounded ritual-checkbox">
+                        <div>
+                            <h4 class="font-semibold text-rich-brown">${name}</h4>
+                            <p class="text-sm text-warm-brown">${description}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-2xl">${emoji}</span>
+                        <p class="text-xs text-warm-brown">0 jours</p>
+                    </div>
+                </div>
+                <div class="w-full bg-soft-gray rounded-full h-2">
+                    <div class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="mt-3 flex justify-between items-center">
+                    <span class="text-xs text-warm-brown">Fréquence: ${frequency === 'daily' ? 'Quotidien' : frequency === 'weekly' ? 'Hebdomadaire' : 'Personnalisé'}</span>
+                    <button onclick="deleteRitual(this)" class="text-xs text-red-400 hover:text-red-600 transition-colors">🗑️ Supprimer</button>
+                </div>
+            `;
+            
+            ritualsContainer.appendChild(newRitual);
+            
+            // Add checkbox functionality to new ritual
+            const checkbox = newRitual.querySelector('.ritual-checkbox');
+            checkbox.addEventListener('change', function() {
+                const label = this.parentElement;
+                const text = label.querySelector('div');
+                if (this.checked) {
+                    text.style.opacity = '0.6';
+                    // Update streak counter (simplified)
+                    const streakElement = newRitual.querySelector('.text-xs');
+                    const currentStreak = parseInt(streakElement.textContent) || 0;
+                    streakElement.textContent = (currentStreak + 1) + ' jours';
+                    
+                    // Update progress bar
+                    const progressBar = newRitual.querySelector('.progress-bar');
+                    const newWidth = Math.min(100, (currentStreak + 1) * 10);
+                    progressBar.style.width = newWidth + '%';
+                } else {
+                    text.style.opacity = '1';
+                }
+                
+                // Update dashboard when new ritual is checked/unchecked
+                updateDashboardRituals();
+            });
+            
+            closeRitualModal();
+            showNotification('✅ Nouveau rituel créé avec succès !');
+        }
+        
+        function closeRitualModal() {
+            const modal = document.querySelector('.fixed.inset-0');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function deleteRitual(button) {
+            if (confirm('Êtes-vous sûre de vouloir supprimer ce rituel ?')) {
+                const ritualCard = button.closest('.bg-cream');
+                ritualCard.remove();
+                showNotification('🗑️ Rituel supprimé');
+            }
+        }
+        
+        // Agenda functionality
+        function addEvent() {
+            const eventName = prompt('Nom de l\'événement :');
+            if (!eventName) return;
+            
+            const eventDate = prompt('Date (format: JJ/MM/AAAA) :');
+            const eventTime = prompt('Heure (format: HH:MM) :');
+            const eventEmoji = prompt('Emoji (optionnel) :') || '📅';
+            
+            if (eventName && eventDate && eventTime) {
+                const eventsContainer = document.querySelector('#page-agenda .bg-cream:last-child .space-y-3');
+                const newEvent = document.createElement('div');
+                newEvent.className = 'flex items-center justify-between p-3 bg-warm-beige rounded-xl';
+                newEvent.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">${eventEmoji}</span>
+                        <div>
+                            <h5 class="font-medium text-rich-brown">${eventName}</h5>
+                            <p class="text-sm text-warm-brown">${eventDate} à ${eventTime}</p>
+                        </div>
+                    </div>
+                    <button class="text-warm-brown hover:text-rich-brown" onclick="editEvent(this)">✏️</button>
+                `;
+                eventsContainer.appendChild(newEvent);
+                
+                showNotification('✅ Événement ajouté à votre agenda !');
+            }
+        }
+        
+        // Aspirations functionality
+        function addAspiration() {
+            const aspirationType = prompt('Type d\'aspiration :\n1. Vision Board\n2. Court terme\n3. Long terme\n4. Affirmation\n\nTapez 1, 2, 3 ou 4 :');
+            
+            if (aspirationType === '1') {
+                addVisionBoardItem();
+            } else if (aspirationType === '2') {
+                addShortTermGoal();
+            } else if (aspirationType === '3') {
+                addLongTermGoal();
+            } else if (aspirationType === '4') {
+                addAffirmation();
+            } else {
+                alert('Choix invalide. Veuillez sélectionner 1, 2, 3 ou 4.');
+            }
+        }
+        
+        function addVisionBoardItem() {
+            const title = prompt('Titre de votre aspiration :');
+            const description = prompt('Description :');
+            const emoji = prompt('Emoji représentatif :') || '⭐';
+            const progress = prompt('Progression actuelle (0-100%) :') || '0';
+            
+            if (title && description) {
+                const visionContainer = document.querySelector('#page-aspirations .grid:first-of-type');
+                const newVision = document.createElement('div');
+                newVision.className = 'bg-cream p-6 rounded-2xl card-shadow hover-lift';
+                newVision.innerHTML = `
+                    <div class="text-center mb-4">
+                        <span class="text-4xl">${emoji}</span>
+                    </div>
+                    <h5 class="font-semibold text-rich-brown text-center mb-2">${title}</h5>
+                    <p class="text-sm text-warm-brown text-center mb-3">${description}</p>
+                    <div class="w-full bg-soft-gray rounded-full h-2">
+                        <div class="progress-bar h-2 rounded-full" style="width: ${progress}%"></div>
+                    </div>
+                    <p class="text-xs text-warm-brown text-center mt-2">${progress}% réalisé</p>
+                `;
+                visionContainer.appendChild(newVision);
+                showNotification('✅ Aspiration ajoutée à votre Vision Board !');
+            }
+        }
+        
+        function addShortTermGoal() {
+            const goalText = prompt('Objectif à court terme (3 mois) :');
+            const emoji = prompt('Emoji (optionnel) :') || '🎯';
+            
+            if (goalText) {
+                const shortTermContainer = document.querySelector('#page-aspirations .grid:last-of-type .bg-cream:first-child .space-y-3');
+                const newGoal = document.createElement('div');
+                newGoal.className = 'flex items-center justify-between p-3 bg-warm-beige rounded-xl';
+                newGoal.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                        <span class="text-rich-brown">${goalText}</span>
+                    </div>
+                    <span class="text-warm-brown">${emoji}</span>
+                `;
+                shortTermContainer.appendChild(newGoal);
+                showNotification('✅ Objectif court terme ajouté !');
+            }
+        }
+        
+        function addLongTermGoal() {
+            const goalText = prompt('Objectif à long terme (1 an) :');
+            const emoji = prompt('Emoji (optionnel) :') || '🌟';
+            
+            if (goalText) {
+                const longTermContainer = document.querySelector('#page-aspirations .grid:last-of-type .bg-cream:last-child .space-y-3');
+                const newGoal = document.createElement('div');
+                newGoal.className = 'flex items-center justify-between p-3 bg-warm-beige rounded-xl';
+                newGoal.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" class="w-5 h-5 text-rich-brown rounded">
+                        <span class="text-rich-brown">${goalText}</span>
+                    </div>
+                    <span class="text-warm-brown">${emoji}</span>
+                `;
+                longTermContainer.appendChild(newGoal);
+                showNotification('✅ Objectif long terme ajouté !');
+            }
+        }
+        
+        function addAffirmation() {
+            const affirmationText = prompt('Votre affirmation positive :');
+            
+            if (affirmationText) {
+                const affirmationsContainer = document.querySelector('#page-aspirations .mt-6 .grid');
+                const newAffirmation = document.createElement('div');
+                newAffirmation.className = 'p-4 bg-warm-beige rounded-xl text-center';
+                newAffirmation.innerHTML = `
+                    <p class="text-rich-brown italic">"${affirmationText}"</p>
+                `;
+                affirmationsContainer.appendChild(newAffirmation);
+                showNotification('✅ Affirmation ajoutée !');
+            }
+        }
+        
+        function editEvent(button) {
+            const eventDiv = button.closest('.flex');
+            const eventName = eventDiv.querySelector('h5').textContent;
+            const eventDetails = eventDiv.querySelector('p').textContent;
+            
+            const newName = prompt('Nouveau nom :', eventName);
+            const newDetails = prompt('Nouveaux détails :', eventDetails);
+            
+            if (newName && newDetails) {
+                eventDiv.querySelector('h5').textContent = newName;
+                eventDiv.querySelector('p').textContent = newDetails;
+                showNotification('✅ Événement modifié !');
+            }
+        }
+        
+        // Notification helper
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-rich-brown text-cream px-6 py-3 rounded-xl card-shadow z-50';
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Profile functionality
+        function saveProfile() {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-rich-brown text-cream px-6 py-3 rounded-xl card-shadow z-50';
+            notification.innerHTML = '✅ Profil mis à jour avec succès !';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Meditation functionality
+        function startMeditation(type) {
+            const meditationCards = document.querySelectorAll('.grid .bg-cream.hover-lift');
+            meditationCards.forEach(card => card.style.display = 'none');
+            
+            const interface = document.getElementById('meditation-interface');
+            interface.classList.remove('hidden');
+            
+            const titles = {
+                '4-7-8': 'Respiration 4-7-8',
+                'coherence': 'Cohérence Cardiaque',
+                'energizing': 'Respiration Énergisante',
+                'square': 'Respiration Carrée'
+            };
+            
+            const instructions = {
+                '4-7-8': 'Inspirez par le nez pendant 4 secondes',
+                'coherence': 'Inspirez pendant 5 secondes',
+                'energizing': 'Inspirez profondément et rapidement',
+                'square': 'Inspirez pendant 4 secondes'
+            };
+            
+            document.getElementById('meditation-title').textContent = titles[type];
+            document.getElementById('meditation-instruction').textContent = instructions[type];
+        }
+        
+        function toggleMeditation() {
+            const btn = document.getElementById('start-btn');
+            if (btn.textContent === 'Commencer') {
+                btn.textContent = 'Pause';
+                meditationStartTime = Date.now();
+                startMeditationTimer();
+            } else if (btn.textContent === 'Pause') {
+                btn.textContent = 'Reprendre';
+                clearInterval(meditationTimer);
+            } else {
+                btn.textContent = 'Pause';
+                startMeditationTimer();
+            }
+        }
+        
+        function startMeditationTimer() {
+            meditationTimer = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - meditationStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('timer-display').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        function stopMeditation() {
+            clearInterval(meditationTimer);
+            document.getElementById('meditation-interface').classList.add('hidden');
+            document.querySelectorAll('.grid .bg-cream.hover-lift').forEach(card => {
+                card.style.display = 'block';
+            });
+            document.getElementById('start-btn').textContent = 'Commencer';
+            document.getElementById('timer-display').textContent = '00:00';
+        }
+        
+        // Responsive behavior
+        function handleResize() {
+            const width = window.innerWidth;
+            const desktop = document.getElementById('desktop-view');
+            const tablet = document.getElementById('tablet-view');
+            const mobile = document.getElementById('mobile-view');
+            
+            if (width >= 1024) {
+                desktop.classList.remove('hidden');
+                tablet.classList.add('hidden');
+                mobile.classList.add('hidden');
+            } else if (width >= 768) {
+                desktop.classList.add('hidden');
+                tablet.classList.remove('hidden');
+                mobile.classList.add('hidden');
+            } else {
+                desktop.classList.add('hidden');
+                tablet.classList.add('hidden');
+                mobile.classList.remove('hidden');
+            }
+        }
+        
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial call
+        
+        // Cycle tracking variables
+        let cycleData = {
+            lastPeriodDate: null,
+            cycleLength: 28,
+            periodDuration: 5,
+            selectedSymptoms: [],
+            selectedMood: null,
+            energyLevel: 7,
+            sleepQuality: null
+        };
+        
+        // Cycle functionality
+        function openPeriodModal() {
+            document.getElementById('period-modal').classList.remove('hidden');
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('last-period-date').value = today;
+        }
+        
+        function closePeriodModal() {
+            document.getElementById('period-modal').classList.add('hidden');
+        }
+        
+        function calculateCycle() {
+            const lastPeriodDate = document.getElementById('last-period-date').value;
+            const cycleLength = parseInt(document.getElementById('cycle-length').value);
+            const periodDuration = parseInt(document.getElementById('period-duration').value);
+            
+            if (!lastPeriodDate) {
+                alert('Veuillez sélectionner la date de vos dernières règles');
+                return;
+            }
+            
+            // Store cycle data
+            cycleData.lastPeriodDate = new Date(lastPeriodDate);
+            cycleData.cycleLength = cycleLength;
+            cycleData.periodDuration = periodDuration;
+            
+            // Calculate current cycle day
+            const today = new Date();
+            const daysDiff = Math.floor((today - cycleData.lastPeriodDate) / (1000 * 60 * 60 * 24));
+            const currentCycleDay = (daysDiff % cycleLength) + 1;
+            
+            // Calculate next period
+            const nextPeriodDate = new Date(cycleData.lastPeriodDate);
+            nextPeriodDate.setDate(nextPeriodDate.getDate() + cycleLength);
+            const daysUntilPeriod = Math.floor((nextPeriodDate - today) / (1000 * 60 * 60 * 24));
+            
+            // Calculate ovulation (typically day 14 for 28-day cycle, adjusted proportionally)
+            const ovulationDay = Math.round(cycleLength * 0.5);
+            const ovulationDate = new Date(cycleData.lastPeriodDate);
+            ovulationDate.setDate(ovulationDate.getDate() + ovulationDay - 1);
+            const daysUntilOvulation = Math.floor((ovulationDate - today) / (1000 * 60 * 60 * 24));
+            
+            // Determine current phase
+            let phase, phaseEmoji, phaseDescription;
+            if (currentCycleDay <= periodDuration) {
+                phase = 'Menstruelle';
+                phaseEmoji = '🩸';
+                phaseDescription = 'Période de repos';
+            } else if (currentCycleDay <= ovulationDay - 2) {
+                phase = 'Folliculaire';
+                phaseEmoji = '🌱';
+                phaseDescription = 'Énergie croissante';
+            } else if (currentCycleDay <= ovulationDay + 2) {
+                phase = 'Ovulation';
+                phaseEmoji = '🌸';
+                phaseDescription = 'Pic de fertilité';
+            } else {
+                phase = 'Lutéale';
+                phaseEmoji = '🌙';
+                phaseDescription = 'Préparation au repos';
+            }
+            
+            // Update UI
+            document.getElementById('current-cycle-day').textContent = currentCycleDay;
+            document.getElementById('current-phase').textContent = phase;
+            document.getElementById('phase-emoji').textContent = phaseEmoji;
+            document.getElementById('phase-description').textContent = phaseDescription;
+            
+            // Update progress bar
+            const progressPercent = (currentCycleDay / cycleLength) * 100;
+            document.getElementById('cycle-progress').style.width = progressPercent + '%';
+            document.querySelector('#cycle-progress').parentElement.nextElementSibling.textContent = Math.round(progressPercent) + '% du cycle';
+            
+            // Update predictions
+            if (daysUntilOvulation > 0) {
+                document.getElementById('next-ovulation').textContent = `Dans ${daysUntilOvulation} jour${daysUntilOvulation > 1 ? 's' : ''}`;
+            } else if (daysUntilOvulation === 0) {
+                document.getElementById('next-ovulation').textContent = 'Aujourd\'hui';
+            } else {
+                document.getElementById('next-ovulation').textContent = 'Passée';
+            }
+            document.getElementById('ovulation-date').textContent = ovulationDate.toLocaleDateString('fr-FR');
+            
+            // Fertile window (5 days before ovulation to 1 day after)
+            const fertileStart = new Date(ovulationDate);
+            fertileStart.setDate(fertileStart.getDate() - 4);
+            const fertileEnd = new Date(ovulationDate);
+            fertileEnd.setDate(fertileEnd.getDate() + 1);
+            document.getElementById('fertile-window').textContent = `${fertileStart.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})} - ${fertileEnd.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'})}`;
+            
+            if (daysUntilPeriod > 0) {
+                document.getElementById('next-period').textContent = `Dans ${daysUntilPeriod} jour${daysUntilPeriod > 1 ? 's' : ''}`;
+            } else {
+                document.getElementById('next-period').textContent = 'Aujourd\'hui ou bientôt';
+            }
+            document.getElementById('period-date').textContent = nextPeriodDate.toLocaleDateString('fr-FR');
+            
+            closePeriodModal();
+            
+            // Show success notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-rich-brown text-cream px-6 py-3 rounded-xl card-shadow z-50';
+            notification.innerHTML = '✅ Cycle calculé avec succès !';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Symptom and mood tracking
+        function initializeCycleTracking() {
+            // Symptom tags
+            document.querySelectorAll('.symptom-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const symptom = this.dataset.symptom;
+                    if (this.classList.contains('bg-warm-brown')) {
+                        // Remove symptom
+                        this.classList.remove('bg-warm-brown', 'text-cream');
+                        this.classList.add('bg-soft-gray', 'text-rich-brown');
+                        cycleData.selectedSymptoms = cycleData.selectedSymptoms.filter(s => s !== symptom);
+                    } else {
+                        // Add symptom
+                        this.classList.remove('bg-soft-gray', 'text-rich-brown');
+                        this.classList.add('bg-warm-brown', 'text-cream');
+                        cycleData.selectedSymptoms.push(symptom);
+                    }
+                    updateSymptomsDisplay();
+                });
+            });
+            
+            // Mood buttons
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active state from all mood buttons
+                    document.querySelectorAll('.mood-btn').forEach(b => {
+                        b.classList.remove('bg-warm-brown', 'text-cream');
+                        b.classList.add('bg-soft-gray');
+                    });
+                    
+                    // Add active state to clicked button
+                    this.classList.remove('bg-soft-gray');
+                    this.classList.add('bg-warm-brown', 'text-cream');
+                    
+                    cycleData.selectedMood = this.dataset.mood;
+                    updateGeneralState();
+                });
+            });
+            
+            // Energy level slider
+            const energySlider = document.getElementById('energy-level');
+            const energyValue = document.getElementById('energy-value');
+            energySlider.addEventListener('input', function() {
+                cycleData.energyLevel = this.value;
+                energyValue.textContent = this.value;
+                updateGeneralState();
+            });
+            
+            // Sleep quality
+            document.getElementById('sleep-quality').addEventListener('change', function() {
+                cycleData.sleepQuality = this.value;
+                updateGeneralState();
+            });
+        }
+        
+        function updateSymptomsDisplay() {
+            const symptomsDisplay = document.getElementById('selected-symptoms');
+            if (cycleData.selectedSymptoms.length === 0) {
+                symptomsDisplay.textContent = 'Aucun symptôme sélectionné';
+            } else {
+                const symptomNames = {
+                    'crampes': 'Crampes',
+                    'fatigue': 'Fatigue',
+                    'ballonnements': 'Ballonnements',
+                    'maux-tete': 'Maux de tête',
+                    'sensibilite': 'Sensibilité seins',
+                    'nausees': 'Nausées',
+                    'irritabilite': 'Irritabilité',
+                    'anxiete': 'Anxiété',
+                    'tristesse': 'Tristesse',
+                    'euphorie': 'Euphorie',
+                    'concentration': 'Difficultés concentration'
+                };
+                
+                const displayNames = cycleData.selectedSymptoms.map(s => symptomNames[s] || s);
+                symptomsDisplay.textContent = displayNames.join(', ');
+            }
+        }
+        
+        function updateGeneralState() {
+            const stateDisplay = document.getElementById('general-state');
+            const moodText = cycleData.selectedMood ? cycleData.selectedMood.charAt(0).toUpperCase() + cycleData.selectedMood.slice(1) : 'Non définie';
+            const sleepText = cycleData.sleepQuality ? cycleData.sleepQuality.charAt(0).toUpperCase() + cycleData.sleepQuality.slice(1) : 'Non défini';
+            
+            stateDisplay.innerHTML = `
+                Humeur : ${moodText}<br>
+                Énergie : ${cycleData.energyLevel}/10<br>
+                Sommeil : ${sleepText}
+            `;
+        }
+        
+        function saveCycleData() {
+            // Get notes
+            const notes = document.getElementById('cycle-notes').value;
+            
+            // Create data object
+            const todayData = {
+                date: new Date().toISOString().split('T')[0],
+                symptoms: [...cycleData.selectedSymptoms],
+                mood: cycleData.selectedMood,
+                energyLevel: cycleData.energyLevel,
+                sleepQuality: cycleData.sleepQuality,
+                notes: notes
+            };
+            
+            // In a real app, this would be saved to a database
+            console.log('Saving cycle data:', todayData);
+            
+            // Show success notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-rich-brown text-cream px-6 py-3 rounded-xl card-shadow z-50';
+            notification.innerHTML = '✅ Données du cycle sauvegardées !';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Checkbox interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const label = this.parentElement;
+                    const text = label.querySelector('span');
+                    if (this.checked) {
+                        text.classList.add('line-through');
+                        text.style.opacity = '0.6';
+                    } else {
+                        text.classList.remove('line-through');
+                        text.style.opacity = '1';
+                    }
+                    
+                    // Update dashboard if this is a ritual checkbox
+                    if (this.classList.contains('ritual-checkbox') || this.closest('#page-rituels')) {
+                        updateDashboardRituals();
+                    }
+                });
+            });
+            
+            // Initialize cycle tracking
+            initializeCycleTracking();
+        });
+        
+        // Update dashboard rituals section
+        function updateDashboardRituals() {
+            // Get all ritual checkboxes from the rituels page
+            const ritualCheckboxes = document.querySelectorAll('#page-rituels input[type="checkbox"]');
+            let completedCount = 0;
+            let totalCount = ritualCheckboxes.length;
+            
+            // Count completed rituals
+            ritualCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    completedCount++;
+                }
+            });
+            
+            // Update the dashboard stats
+            const dashboardRitualStat = document.querySelector('.stat-card:nth-child(2) .text-3xl');
+            const dashboardProgressBar = document.querySelector('.stat-card:nth-child(2) .progress-bar');
+            
+            if (dashboardRitualStat && dashboardProgressBar) {
+                dashboardRitualStat.textContent = `${completedCount}/${totalCount}`;
+                const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+                dashboardProgressBar.style.width = progressPercent + '%';
+            }
+            
+            // Update the "Rituels récents" section in dashboard
+            const recentRitualsSection = document.querySelector('#page-dashboard .grid:last-child .bg-cream:first-child .space-y-3');
+            if (recentRitualsSection) {
+                // Clear existing content
+                recentRitualsSection.innerHTML = '';
+                
+                // Get ritual names and their status
+                const ritualCards = document.querySelectorAll('#page-rituels .bg-cream.hover-lift');
+                let displayedCount = 0;
+                
+                ritualCards.forEach(card => {
+                    if (displayedCount >= 3) return; // Show only first 3
+                    
+                    const checkbox = card.querySelector('input[type="checkbox"]');
+                    const ritualName = card.querySelector('h4').textContent;
+                    const isCompleted = checkbox.checked;
+                    
+                    const ritualItem = document.createElement('div');
+                    ritualItem.className = 'flex items-center justify-between';
+                    ritualItem.innerHTML = `
+                        <span class="text-rich-brown ${isCompleted ? 'line-through opacity-60' : ''}">${ritualName}</span>
+                        <span class="text-2xl">${isCompleted ? '✅' : '⏳'}</span>
+                    `;
+                    
+                    recentRitualsSection.appendChild(ritualItem);
+                    displayedCount++;
+                });
+                
+                // If no rituals, show placeholder
+                if (displayedCount === 0) {
+                    recentRitualsSection.innerHTML = '<div class="text-warm-brown text-sm">Aucun rituel créé</div>';
+                }
+            }
+            
+            // Show notification when ritual is completed
+            const completedRituals = Array.from(ritualCheckboxes).filter(cb => cb.checked);
+            if (completedCount > 0) {
+                // Update streak if all rituals are completed
+                if (completedCount === totalCount && totalCount > 0) {
+                    showNotification('🔥 Tous les rituels du jour complétés ! Bravo !');
+                    updateStreak();
+                }
+            }
+        }
+        
+        // Update streak counter
+        function updateStreak() {
+            const streakElement = document.querySelector('.stat-card:first-child .text-3xl');
+            if (streakElement) {
+                let currentStreak = parseInt(streakElement.textContent) || 0;
+                // In a real app, this would check if it's a new day and increment accordingly
+                // For demo purposes, we'll just show the current streak
+                streakElement.textContent = currentStreak;
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ef2d864025d110',t:'MTc1NTE2MTE0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
